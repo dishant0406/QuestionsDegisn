@@ -3,6 +3,7 @@ import { StateContext } from '../Context/Context'
 
 const QuestionFourteen = () => {
   const {questions,setQuestions} = useContext(StateContext)
+  const [message, setMessage] = useState('')
 
   const [options, setOptions]=useState([
     {id:1, value:'Cold',selected:false},
@@ -31,6 +32,40 @@ const QuestionFourteen = () => {
     setOptions(newOptions)
   }
 
+  const handleClick = () =>{
+    var ENDPOINT = 'https://askai.aiclub.world/44860347-27ad-447d-a983-8f1fb96e9311';
+
+    var dataMood = `{
+    "Age":"${questions.age}",
+    "Gender":"${questions.gender}",
+    "Skin_type":"${questions.skin}",
+    "bothers":"${questions.skinBother}",
+    "skincareroutine":"${questions.skinRoutine}",
+    "photos":"${questions.skinTrent}",
+    "water":"${questions.waterGlasses}",
+    "sleep":"${questions.sleepHours}",
+    "stress":"${questions.stressLevel}",
+    "diet":"${questions.diet}",
+    "screen_time":"${questions.screentime}",
+    "products":"${questions.skinProduct}",
+    "makeup":"${questions.makeup}",
+    "remove_makeup":"${questions.makeupRemove}",
+    "location":"${questions.climate}"}`;
+
+    fetch(ENDPOINT, {
+      method: 'POST',
+      body: dataMood,
+    })
+      .then(res => res.json())
+      .then(response => JSON.parse(response.body))
+      .then(function (data) {
+        console.log("processMoodPrediction: ", data);
+        setMessage(data.Message)
+      })
+      .catch(err => console.log('err', err));
+
+  }
+
   return (
     <div className='flex'>
       <div className='h-[100vh] w-[70vw] flex justify-center items-center'>
@@ -50,7 +85,10 @@ const QuestionFourteen = () => {
             </div>
           </div>
           <div className='flex w-[50vw] justify-center mt-[2rem]'>
-            <button className='w-[30rem] hover:bg-[#6fb09a] transition text-[20px] font-[500] opacity-[0.9] h-[3rem] bg-[#7BC4AB] text-[#fff] transition border rounded border-[#7BC4AB]'>Click here to get your personalised product</button>
+            <button onClick={handleClick} className='w-[30rem] hover:bg-[#6fb09a] transition text-[20px] font-[500] opacity-[0.9] h-[3rem] bg-[#7BC4AB] text-[#fff] transition border rounded border-[#7BC4AB]'>Click here to get your personalised product</button>
+          </div>
+          <div className='mt-[1rem] flex justify-center'>
+            <p className='font-sans font-[500] text-[26px]'>{message}</p>
           </div>
         </div>
       </div>
